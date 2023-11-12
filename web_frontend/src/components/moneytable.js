@@ -31,6 +31,7 @@ function MoneyTable({inference}) {
     const [sum, setSum] = useState(0);
 
     useEffect(() => {
+        if (inference === null) return; 
         setData(getFrequency(inference));
         setSum(Add(inference));
     }, [inference]);
@@ -49,12 +50,14 @@ function MoneyTable({inference}) {
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((number, index) => (
-                            <tr key={index} style={index % 2 === 0 ? styles.even : styles.odd}>
-                                <td>{number.money}</td>
-                                <td>{number.qnt}</td>
-                            </tr>
-                        ))}
+                        {inference && (
+                            data.map((number, index) => (
+                                <tr key={index} style={index % 2 === 0 ? styles.even : styles.odd}>
+                                    <td>{number.money}</td>
+                                    <td>{number.qnt}</td>
+                                </tr>
+                            ))
+                        )}
 
                         
                         {/* {inference.map((number, index) => (
