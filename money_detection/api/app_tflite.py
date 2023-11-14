@@ -14,6 +14,7 @@ from tflite_utils import Make_Inference
 
 #TFLite model is way slower on PC than on Android (https://discuss.tensorflow.org/t/efficientdet-lite0-very-slow-on-windows-intel/7756)
 MODEL_PATH = './tflite_detect_model/dataset_0.tflite'
+CLASSES = ["real","dolar","euro"]
 # Load the TFLite model
 interpreter = tf.lite.Interpreter(model_path=MODEL_PATH)
 interpreter.allocate_tensors()
@@ -73,7 +74,7 @@ def read_images(image: List[UploadFile]):
 
             obj = {
                 'bounding_box': [xmin, ymin, xmax, ymax],
-                'class': obj['class_id'],
+                'class': CLASSES[int(obj['class_id'])],
                 'score': obj['score'],
                 'value': random.choice(money_values) #TODO: change to 'value': money_values[obj['class_id']]
             }

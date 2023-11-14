@@ -9,15 +9,21 @@ const ImageDisplay = ({image, imageDimensions, apiData}) => {
     const [canvasDim, setCanvasDim] = useState({width: 800, height: 800});
     const canvasRef = useRef(null);
     useEffect(() => {
-    const ctx = canvasRef.current.getContext('2d'); 
+    const ctx = canvasRef.current.getContext('2d');   
+    ctx.canvas.width =  ctx.canvas.offsetWidth;
+    ctx.canvas.height =  ctx.canvas.offsetHeight;  
+    // Ajusta o tamanho do canvas para preencher a div pai
     if (inicialized){
         let crop;
-        ctx.strokeStyle = 'yellow'; 
-        ctx.lineWidth = 4; 
-        ctx.fillStyle = 'orange'; 
-        ctx.font = 'bold 20px Arial'; 
-
+        ctx.strokeStyle = 'black'; 
+        ctx.lineWidth = 5; 
+        ctx.fillStyle = 'yellow'; 
+        ctx.font = 'bold 25px Arial'; 
+        
         var canvas = ctx.canvas ;
+        // canvas.width =  canvas.offsetWidth;
+        // canvas.height =  canvas.offsetHeight;  
+
         var hRatio = canvas.width  / imageDimensions.width    ;
         var vRatio =  canvas.height / imageDimensions.height  ;
         var ratio  = Math.min ( hRatio, vRatio );
@@ -32,14 +38,13 @@ const ImageDisplay = ({image, imageDimensions, apiData}) => {
             
             //Drawing the bounding boxes on the image
             for (var i = 0; i < apiData.length; i++){
-                console.log(apiData.length);
-                crop = {x: (apiData[i].bounding_box[0]), 
-                        y: (apiData[i].bounding_box[1]), 
-                        width: ((apiData[i].bounding_box[2] - apiData[i].bounding_box[0])), 
-                        height: ((apiData[i].bounding_box[3] - apiData[i].bounding_box[1])),
+                crop = {x: (apiData[i].bounding_box[0] * ratio + centerShift_x), 
+                        y: (apiData[i].bounding_box[1] * ratio + centerShift_y), 
+                        width: ((apiData[i].bounding_box[2] - apiData[i].bounding_box[0]) * ratio), 
+                        height: ((apiData[i].bounding_box[3] - apiData[i].bounding_box[1]) * ratio),
                         class: apiData[i].class,
                         value: apiData[i].value}
-                console.log(crop);
+                // console.log(crop);
                 ctx.strokeRect(crop.x, crop.y, crop.width, crop.height);
                 
                 // const label = crop.class; 
@@ -48,13 +53,14 @@ const ImageDisplay = ({image, imageDimensions, apiData}) => {
                 // ctx.strokeText(label, labelX, labelY);
                 // ctx.fillText(label, labelX, labelY);
                 const prediction = crop.value;
-                const predictionX = crop.x + crop.width - ctx.measureText(prediction).width;  
-                const predictionY =  crop.y - 10; 
+                const predictionX = crop.x + (crop.width - ctx.measureText(prediction).width)/2 /*+ crop.width - ctx.measureText(prediction).width*/;  
+                console.log(ctx.measureText(prediction));
+                const predictionY =  crop.y + (crop.height - ctx.lineWidth)/*- 10*/; 
+                console.log(ctx.measureText(prediction));
                 ctx.strokeText(prediction, predictionX, predictionY);
                 ctx.fillText(prediction, predictionX, predictionY);
             }
         }
-
         setInicialized(false);
     }
     }, []);
@@ -62,7 +68,9 @@ const ImageDisplay = ({image, imageDimensions, apiData}) => {
 
         <>
             {image && (
-                <canvas className="canv" ref={canvasRef} width={imageDimensions.width} height={imageDimensions.height}></canvas>
+                <div style={styles.imagedisplay}>
+                    <canvas style={styles.canvas} ref={canvasRef} /*width={imageDimensions.width} height={imageDimensions.height}*/></canvas>
+                </div>
             )}
         </>
     );
@@ -71,6 +79,12 @@ const ImageDisplay = ({image, imageDimensions, apiData}) => {
 
 
 const styles = {
+    canvas: {
+        display: "block",
+        height: '100%',
+        width: '100%',
+        // border: '5px solid black',
+    },
     imagedisplay: {
         width: '60%',
         height: '70%',
@@ -79,6 +93,7 @@ const styles = {
         flexDirection: "column",
         alignapiDatas: "center",
         justifyContent: "space-evenly",
+        // border: '5px solid white',
     },
     image: {
         maxWidth: '100%',
