@@ -1,3 +1,23 @@
-/money_detection/training/TFLite_training/tf_data
-/money_detection/training/yolo_training/data/
+/money_detection/real_dataset/add_new_images/images/test/*
+/money_detection/real_dataset/add_new_images/images/train/*
+/money_detection/real_dataset/add_new_images/images/val/*
+/money_detection/real_dataset/add_new_images/labels/test/*
+/money_detection/real_dataset/add_new_images/labels/train/*
+/money_detection/real_dataset/add_new_images/labels/val/*
+
+/money_detection/real_dataset/images/test/*
+/money_detection/real_dataset/images/train/*
+/money_detection/real_dataset/images/val/*
+/money_detection/real_dataset/labels/test/*
+/money_detection/real_dataset/labels/train/*
+/money_detection/real_dataset/labels/val/*
+
+/money_classification/real_dataset/0.05/*
+/money_classification/real_dataset/0.10/*
+/money_classification/real_dataset/0.25/*
+/money_classification/real_dataset/0.50/*
+/money_classification/real_dataset/1.00/*
+
+/money_classification/extract_dataset_from_xml/dataset/images/*
+/money_classification/extract_dataset_from_xml/dataset/labels/*
 # /money_detection/training/runs/

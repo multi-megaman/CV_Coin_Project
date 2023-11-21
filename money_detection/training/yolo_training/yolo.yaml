@@ -1,8 +1,0 @@
-path: D:/GitHub/CV_Coin_Project/money_detection/training/data
-train: images/train
-test: images/test
-val: images/val
-
-nc: 1
-names: ['real']
-

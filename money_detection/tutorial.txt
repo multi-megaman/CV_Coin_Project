@@ -1,0 +1,17 @@
+Para treinar o modelo diretamente em TF & TFLite:
+  - No arquivo "tflite_detect_model.py" aponte corretamente para o local das imagens e labels de treinamento, assim como apontar corretamente para as imagens e labels de validação.
+
+  -Ajuste os parâmetros de treinamento a vontade,
+   como mudar o batch size ou a quantidade de épocas
+   que o modelo irá treinar.
+
+  - Vá para o diretório onde o arquivo "train.py"
+    está e execute-o, e espere o treinamento e a validação do 
+    modelo finalizar. Ao acabar, um arquivo chamado 
+    "android.tflite" será criado na pasta, ele é a 
+    representação do modelo treinado.
+
+
+Para iniciar a API:
+    - basta apenas rodar o "app.py" localizado na pasta "api"
+    - Dica: caso queira testar a api isoladamente, basta acessar o ip da api + /docs. Ex: http://127.0.0.1:8080/docs
