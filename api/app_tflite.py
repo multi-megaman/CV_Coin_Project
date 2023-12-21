@@ -12,10 +12,11 @@ from fastapi.middleware.cors import CORSMiddleware
 import tensorflow as tf
 from tflite_utils import Make_Inference
 
-from phase2.saved_model_classification_inference import phase2_classification_inference
+from classification.tflite_classification_inference import phase2_classification_inference
 
 #TFLite model is way slower on PC than on Android (https://discuss.tensorflow.org/t/efficientdet-lite0-very-slow-on-windows-intel/7756)
-PHASE1_MODEL_PATH = './phase1/dataset_0.tflite'
+PHASE1_MODEL_PATH = './detection/dataset_0.tflite'
+PHASE2_MODEL_PATH = './classification/model.tflite'
 CLASSES = ["real","dolar","euro"]
 VALUES = ['0.05', '0.10', '0.25', '0.50', '1.00']
 # Load the TFLite model
@@ -27,7 +28,11 @@ _, input_height, input_width, _ = interpreter.get_input_details()[0]['shape']
 
 #phase2
 
-phase2_model = tf.keras.models.load_model('./phase2/saved_model/')
+# phase2_model = tf.keras.models.load_model('./phase2/saved_model/')
+phase2_model = tf.lite.Interpreter(model_path=PHASE1_MODEL_PATH)
+phase2_model.allocate_tensors()
+phase2 = phase2_model.get_signature_runner()
+_, input_height2, input_width2, _ = phase2_model.get_input_details()[0]['shape']
 
 
 app = FastAPI()
@@ -100,7 +105,7 @@ def read_images(image: List[UploadFile]):
                 'bounding_box': [xmin, ymin, xmax, ymax],
                 'class': CLASSES[int(obj['class_id'])],
                 'score': obj['score'],
-                'value': phase2_classification_inference(phase2_model, img[ymin:ymax, xmin:xmax])
+                'value': phase2_classification_inference(phase2, img[ymin:ymax, xmin:xmax])
             }
             bbs.append(obj)
 
@@ -112,6 +117,7 @@ def read_images(image: List[UploadFile]):
             # cv2.rectangle(img, (xmin, ymin), (xmax, ymax), (0, 255, 0), 2)
 
         api_return = {'data': bbs, 'image': img.tolist()}
+        print(api_return)
         return api_return
     except Exception as e:
         print(e)

@@ -22,7 +22,7 @@ def detect_objects(signature_fn, image, threshold):
 
     end_time = time.time()
     elapsed_time = end_time - start_time
-    print("Elapsed time to infer: " + str(elapsed_time))
+    # print("Elapsed time to infer: " + str(elapsed_time))
 
     # Get all outputs from the model
     count = int(np.squeeze(output['output_0']))
@@ -30,10 +30,10 @@ def detect_objects(signature_fn, image, threshold):
     classes = np.squeeze(output['output_2'])
     boxes = np.squeeze(output['output_3'])
     
-    print("count", count)
-    print("scores", scores)
-    print("classes", classes)
-    print("boxes", boxes)
+    # print("count", count)
+    # print("scores", scores)
+    # print("classes", classes)
+    # print("boxes", boxes)
 
     results = []
     for i in range(count):

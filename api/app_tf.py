@@ -22,7 +22,7 @@ phase1_model = tf.saved_model.load('./detection/saved_model/')
 infer = phase1_model.signatures['serving_default']
 
 #phase2
-phase2_model = tf.keras.models.load_model('./classification/saved_model/')
+phase2_model = tf.keras.models.load_model('./classification/saved_model/', compile=False)
 
 
 app = FastAPI()
@@ -76,7 +76,7 @@ def read_images(image: List[UploadFile]):
             # ymin = int(ymin)
             # xmax = int(xmax)
             # xmin = int(xmin)
-            print("ymin: ", ymin, "ymax: ", ymax, "xmin: ", xmin, "xmax: ", xmax)
+            # print("ymin: ", ymin, "ymax: ", ymax, "xmin: ", xmin, "xmax: ", xmax)
 
             if xmin < 0:
                 xmin = 0
@@ -95,7 +95,7 @@ def read_images(image: List[UploadFile]):
                 xmax = 0
             if ymax < 0:
                 ymax = 0
-            print("SUBIMAGE SHAPE: ", img[ymin:ymax, xmin:xmax].shape)
+            # print("SUBIMAGE SHAPE: ", img[ymin:ymax, xmin:xmax].shape)
 
             obj = {
                 'bounding_box': [xmin, ymin, xmax, ymax],

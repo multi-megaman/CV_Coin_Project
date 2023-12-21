@@ -13,7 +13,7 @@ threshold = 0.3
 
 #load a saved model
 tf.keras.backend.clear_session()
-model = tf.saved_model.load('../models/saved_model/')
+model = tf.saved_model.load('./models/saved_model/')
 infer = model.signatures['serving_default']
 #List signatures
 print(infer.structured_outputs)

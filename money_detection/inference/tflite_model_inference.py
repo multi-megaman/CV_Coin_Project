@@ -1,12 +1,10 @@
 import tensorflow as tf
 import numpy as np
 import cv2
-from tflite_model_maker.object_detector import ObjectDetector
-from tflite_model_maker import object_detector
 
 from PIL import Image
 
-model_path = '../models/android.tflite'
+model_path = './models/android.tflite'
 
 
 # Load the labels into a list
@@ -108,14 +106,15 @@ DETECTION_THRESHOLD = 0.5
 
 TEMP_FILE = '../test.jpeg'
 
-# !wget -q -O $TEMP_FILE $INPUT_IMAGE_URL
-im = Image.open(TEMP_FILE)
-im.thumbnail((512, 512), Image.ANTIALIAS)
-im.save(TEMP_FILE, 'PNG')
+# # !wget -q -O $TEMP_FILE $INPUT_IMAGE_URL
+# im = Image.open(TEMP_FILE)
+# im.thumbnail((512, 512), Image.ANTIALIAS)
+# im.save(TEMP_FILE, 'PNG')
 
 # Load the TFLite model
 interpreter = tf.lite.Interpreter(model_path=model_path)
 interpreter.allocate_tensors()
+print(interpreter._signature_defs)
 
 # Run inference and draw detection result on the local copy of the original file
 detection_result_image = run_odt_and_draw_results(
@@ -129,4 +128,3 @@ Image.fromarray(detection_result_image)
 
 # Saving the result
 cv2.imwrite('result.png', detection_result_image)
-

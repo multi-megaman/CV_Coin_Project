@@ -25,13 +25,19 @@ val_data = object_detector.DataLoader.from_pascal_voc(
    f'{DATASET_PATH}/labels/val',
      ['real','dolar','euro']
 )
+
+test_data = object_detector.DataLoader.from_pascal_voc(
+  f'{DATASET_PATH}/images/test',
+   f'{DATASET_PATH}/labels/test',
+     ['real','dolar','euro']
+)
 #------------------------------------------------------------
 
 """
 Model           	Size(MB)*	Latency(ms)**	Average Precision***
-EfficientDet-Lite0	4.4	            37	            25.69%
-EfficientDet-Lite1	5.8	            49	            30.55%
-EfficientDet-Lite2	7.2	            69	            33.97%
+EfficientDet-Lite0	4.4	          37	            25.69%
+EfficientDet-Lite1	5.8	          49	            30.55%
+EfficientDet-Lite2	7.2	          69	            33.97%
 EfficientDet-Lite3	11.4	        116	            37.70%
 EfficientDet-Lite4	19.9	        260	            41.96%
 """
@@ -39,8 +45,9 @@ EfficientDet-Lite4	19.9	        260	            41.96%
 spec = model_spec.get('efficientdet_lite0')
 
 # https://github.com/tensorflow/hub/issues/850
-model = object_detector.create(train_data, model_spec=spec, batch_size=8, train_whole_model=True, epochs=3, validation_data=val_data)
-model.evaluate(val_data)
+model = object_detector.create(train_data, model_spec=spec, batch_size=8, train_whole_model=True, epochs=2, validation_data=val_data)
+print("=======SAVED MODEL=======")
+print(model.evaluate(test_data))
 
 #save model as savedmodel
 model.export(export_dir='./models/', export_format=ExportFormat.SAVED_MODEL)
@@ -52,4 +59,4 @@ model.export(export_dir='./models/', export_format=ExportFormat.SAVED_MODEL)
 
 model.export(export_dir='.', tflite_filename='./models/android.tflite')
 print("=======TFLITE MODEL=======")
-print(model.evaluate_tflite('./models/android.tflite', val_data))
+print(model.evaluate_tflite('./models/android.tflite', test_data))
